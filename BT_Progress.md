@@ -2,8 +2,7 @@
 
 - Read about markdown languages and Markdown
 - Created GitHub repository
-
-
+<!-- -->
 - Read and browsed in the iconclass website
 
 
@@ -29,6 +28,7 @@
 - Invited Etienne Posthumus and Tabea Tietz to github repository as collaborators
 - Learned about the difference between .md and .txt files
 - Thought about how to structure markdown files that report the progress in order to not get lost in them in the future
+
 
 
 
