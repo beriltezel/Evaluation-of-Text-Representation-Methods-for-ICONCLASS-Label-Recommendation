@@ -19,6 +19,7 @@
 - Created the first test file as .py and .ipynb
 - Installed ipykernel paykage to venv
 - Tried to test child() without language input -> default language English (not surprising 😊)
+  
   > Decided I like working with .py files more than .ipynb files
 - Set git username and email in local computer
 - Pushed first test files in github
@@ -26,6 +27,7 @@
 - Learned about the difference between .md and .txt files
 - Thought about how to structure markdown files that report the progress in order to not get lost in them in the future
 - Added and edited progress tracking list to github in a .md file
+
 
 
 
