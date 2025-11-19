@@ -27,6 +27,8 @@
 - Learned about the difference between .md and .txt files
 - Thought about how to structure markdown files that report the progress in order to not get lost in them in the future
 - Added and edited progress tracking list to github in a .md file
+- Updated local repository
+
 
 
 
