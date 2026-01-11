@@ -99,7 +99,7 @@ def build_db():
     con.commit()
     con.close()
 
-    print(f"Data bank nuilt: iconclass_hierarchy.db — {inserted} entries.")
+    print(f"Database built: iconclass_hierarchy.db — {inserted} entries.")
     print(f"Empty notations: {skipped_empty}")
 
 
