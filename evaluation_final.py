@@ -17,7 +17,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_RESULTS_JSONL_PATH = os.path.join(BASE_DIR, "model_results.jsonl")
 HIERARCHY_DB_PATH = os.path.join(BASE_DIR, "iconclass_hierarchy.db")
 EVALUATION_RESULTS_JSONL_PATH = os.path.join(BASE_DIR, "evaluation_results.jsonl")
-GRAPH_DIR = os.path.join(BASE_DIR, "evaluation_graphs")
+
+RUN_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
+GRAPH_DIR = os.path.join(BASE_DIR, "evaluation_graphs", RUN_TIMESTAMP)
 
 
 def load_jsonl(path):
@@ -341,6 +343,86 @@ def plot_evaluation_results(records):
 
     plt.show()
 
+def plot_query_performance(records):
+    os.makedirs(GRAPH_DIR, exist_ok=True)
+
+# This function creates graphs showing metric performance for each query, with one graph per metric.
+
+    metrics = [
+        "precision",
+        "recall",
+        "f1",
+        "r_precision",
+        "map",
+        "wu_palmer_mean",
+        "wu_palmer_gt_to_pred",
+        "wu_palmer_pred_to_gt"
+    ]
+
+    query_order = []
+    model_order = []
+    values_by_model_query = {}
+
+    for record in records:
+        model = record.get("model")
+        query = record.get("query")
+
+        if not model or not query:
+            continue
+
+        if query not in query_order:
+            query_order.append(query)
+
+        if model not in model_order:
+            model_order.append(model)
+
+        values_by_model_query[(model, query)] = record
+
+    if not query_order or not model_order:
+        print("No query scores found for plotting.")
+        return
+
+    x = range(len(query_order))
+
+    for metric in metrics:
+        plt.figure(figsize=(16, 7))
+
+        for model in model_order:
+            values = []
+
+            for query in query_order:
+                record = values_by_model_query.get((model, query))
+
+                if record is None:
+                    values.append(None)
+                else:
+                    values.append(record.get(metric, 0.0))
+
+            plt.plot(
+                x,
+                values,
+                marker="o",
+                markersize=4,
+                linewidth=1.5,
+                label=model
+            )
+
+        plt.xticks(list(x), query_order, rotation=75, ha="right")
+        plt.ylim(0, 1.05)
+        plt.title(f"{metric} per query")
+        plt.xlabel("Query")
+        plt.ylabel(metric)
+        plt.grid(True, alpha=0.3)
+        plt.legend()
+        plt.tight_layout()
+
+        graph_path = os.path.join(GRAPH_DIR, f"{metric}_per_query.png")
+        plt.savefig(graph_path, dpi=300)
+
+    print("Query performance graphs saved in:")
+    print(GRAPH_DIR)
+
+    plt.show()
 
 def run_evaluation():
     model_records = load_jsonl(MODEL_RESULTS_JSONL_PATH)
@@ -361,7 +443,7 @@ def run_evaluation():
     print(f"Evaluation results written to: {EVALUATION_RESULTS_JSONL_PATH}")
 
     plot_evaluation_results(evaluation_records)
-
+    plot_query_performance(evaluation_records)
 
 if __name__ == "__main__":
     run_evaluation()
